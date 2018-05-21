@@ -1,0 +1,100 @@
+{% extends "Easyui_BaseTemplate_mobile.html" %}
+{% block title %}
+    加入coconimi
+{% endblock %}
+
+{% block head-script %}
+    <script>
+        $(function () {
+            $("#registe").click(function registe() {
+                //获取提交数据
+                $("#registe_info").html("")
+                user = $("#user").val();
+                pwd = $("#pwd").val();
+                re_pwd = $("#re_pwd").val();
+                nick_name = $("#nick_name").val();
+                email = $("#email").val();
+                isOK = false
+                if (!user || !pwd || !re_pwd || !nick_name || !email) {
+                    return $("#registe_info").html("请输入个人信息")
+                }
+                var re = /[A-Za-z]+[0-9]*/
+                var email_re = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g
+                console.log(re.test(user))
+                if (!re.test(user) || user.length < 8) {
+                    $("#registe_info").html("用户名英文开头且至少8位")
+                } else if (!re.test(pwd) || pwd.length < 6) {
+                    $("#registe_info").html("密码英文开头且至少6位")
+                } else if (!email_re.test(email)) {
+                    $("#registe_info").html("邮箱格式不对")
+                } else if (pwd != re_pwd) {
+                    $("#registe_info").html("确认密码不一致")
+                } else {
+                    isOK = true
+                }
+                if (isOK) {
+                    $.ajax({
+                        url: '/user/registe/',
+                        type: 'post',
+                        data: {user: user, pwd: pwd, nick_name: nick_name, email: email},
+                        success: function (r) {
+                            var json = JSON.parse(r)
+                            if (!json.status) {
+                                $("#registe_info").html(json.error)
+                            } else {
+                                alert("注册成功")
+                                location.href = "/user/login"
+                            }
+                        }
+                    })
+                }
+            })
+        });
+    </script>
+
+{% endblock %}
+{% block body %}
+    <div class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <span class="m-title">Join to Cocomini</span>
+            </div>
+        </header>
+        <div style="margin:20px auto;width:100px;height:100px;border-radius:100px;overflow:hidden">
+            <img src="/static/img/logo.bmp" style="margin:0;width:100%;height:100%;">
+        </div>
+        <div style="padding:0 20px">
+            <div style="margin-bottom:10px">
+                <input id="user" class="easyui-textbox" data-options="prompt:'用户名(英文开头且至少8位)',iconCls:'icon-man'"
+                       style="width:100%;height:38px">
+            </div>
+            <div style="margin-bottom:10px">
+                <input id="pwd" class="easyui-textbox" data-options="prompt:'密码(英文开头且至少6位)',iconCls:'icon-lock'"
+                       style="width:100%;height:38px">
+            </div>
+            <div style="margin-bottom:10px">
+                <input id="re_pwd" class="easyui-textbox" data-options="prompt:'再次确认密码',iconCls:'icon-lock'"
+                       style="width:100%;height:38px">
+            </div>
+            <div style="margin-bottom:10px">
+                <input id="nick_name" class="easyui-textbox" data-options="prompt:'请输入昵称',iconCls:'icon-mini-edit'"
+                       style="width:100%;height:38px">
+            </div>
+            <div style="margin-bottom:10px">
+                <input id="email" class="easyui-textbox" data-options="prompt:'请输入邮箱',iconCls:'icon-email'"
+                       style="width:100%;height:38px">
+            </div>
+            <div style="margin-top:20px">
+                <span id="registe_info" style="color:rebeccapurple;font-size: 15px">{{ result.msg }}</span>
+            </div>
+            <div style="text-align:center;margin-top:30px">
+                <a href="#" id="registe" class="easyui-linkbutton" style="width:100%;height:40px"><span
+                        style="font-size:16px">注册</span></a>
+            </div>
+            <div style="text-align:center;margin-top:30px">
+                <a href="javascript:history.back()" class="easyui-linkbutton" style="width:100%;height:40px"><span
+                        style="font-size:16px">返回</span></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

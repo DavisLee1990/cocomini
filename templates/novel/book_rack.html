@@ -1,0 +1,91 @@
+{% extends "Easyui_BaseTemplate_mobile.html" %}
+{% block title %}
+    我的书架
+{% endblock %}
+
+{% block head-script %}
+    <style>
+        a:link {
+            color: black;
+        }
+
+        a:visited {
+            color: black;
+        }
+
+        a:hover {
+            color: black;
+        }
+
+        a:active {
+            color: black;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar" style="background-color:#a6e1ec;height:50px">
+                <span class="m-title">书架</span>
+            </div>
+        </header>
+        <div>
+            {% if novels %}
+                {% for row in novels %}
+                    <a href="/novel/catalog/{{ row.novel.novel_type }}-{{ row.novel.novel_id }}">
+                        <div class="hh-inner" style="height: 100px;width:100%">
+                            <div style="float: left;margin: 10px;width:20%;height:94px">
+                                <img style="width:74px;height:94px" src={{ row.novel.novel_img }}>
+                            </div>
+                            <div style="float: left;margin: 3px;width:70%;height:94px;color: #333">
+                                <p style="margin-top: 10px;font-size: 16px;">书名:{{ row.novel.novel_title }}</p>
+                                <p style="margin-top: 10px;">作者:{{ row.novel.novel_author }}</p>
+                                <p style="margin-top: 10px;">最新:
+                                    {% if  row.novel.novel_type == 0 %}
+                                        {{ row.novel.qihuan_chapters_set.all.last }}
+                                    {% elif row.novel.novel_type == 1 %}
+                                        {{ row.novel.wuxia_chapters_set.all.last }}
+                                    {% elif row.novel.novel_type == 2 %}
+                                        {{ row.novel.doushi_chapters_set.all.last }}
+                                    {% elif row.novel.novel_type == 3 %}
+                                        {{ row.novel.lishi_chapters_set.all.last }}
+                                    {% elif row.novel.novel_type == 4 %}
+                                        {{ row.novel.kehuan_chapters_set.all.last }}
+                                    {% elif row.novel.novel_type == 5 %}
+                                        {{ row.novel.wangyou_chapters_set.all.last }}
+                                    {% elif row.novel.novel_type == 6 %}
+                                        {{ row.novel.nvsheng_chapters_set.all.last }}
+                                    {% endif %}</p>
+                            </div>
+                        </div>
+                    </a>
+                    <hr style="height:1px;border:none;border-top:1px solid #555555;">
+                    {#                <div style="margin-bottom:10px">#}
+                    {#                    <div style="float: left;border: 1px solid red">#}
+                    {#                        <img style="width:100%;height:94px" src={{ row.novel.novel_img }}>#}
+                    {#                    </div>#}
+                    {#                    <div style="float: left;border: 1px solid green">#}
+                    {#                        <p style="margin-top: 10px;font-size: 16px">书名:{{ row.novel.novel_title }}</p>#}
+                    {#                        <p style="margin-top: 10px;">作者:{{ row.novel.novel_author }}</p>#}
+                    {#                    </div>#}
+                    {#                </div>#}
+
+                {% endfor %}
+            {% else %}
+                <h1>空空如也，快去书城看一看吧</h1>
+            {% endif %}
+
+        </div>
+    </div>
+    <style scoped>
+        .hh-inner {
+            position: relative;
+            line-height: 20px;
+            background: #fff;
+            font-weight: bold;
+            margin: -5px;
+            padding: 5px;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "Sub_BaseTemplate.html" %}
+
+{% block title %}
+    {{ novel.novel_title }}
+{% endblock %}
+
+{% block head-title %}
+    {{ novel.novel_title }}
+{% endblock %}
+
+{% block more-content %}
+    <div style="font-size: 16px;font-weight:bold;">
+        <div style="background-color:#edfaff;padding-left: 18px">
+            <table width="100%">
+                <tr>
+                    <td rowspan="5" width="20%">
+                        <img src="{{ novel.novel_img }}">
+                    </td>
+                    <td height="30px">书名:
+                        {{ novel.novel_title }}
+                    </td>
+                </tr>
+                <tr>
+                    <td height="30px">作者:
+                        {{ novel.novel_author }}
+                    </td>
+                </tr>
+                <tr>
+                    <td height="30px">
+                        类别:
+                        {{ novel_type_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td height="30px">
+                        状态:
+                        {% if novel.novel_status == 0 %}
+                            连载中
+                        {% else %}
+                            已完结
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td height="30px">最新:
+                        {% if last_chapter_title %}
+                            {{ last_chapter_title }}
+                        {% else %}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <p style="text-indent: 2em;">
+                {{ novel.novel_intro }}
+            </p>
+        </div>
+    </div>
+    <a style="font-size: 16px;line-height: 40px;text-align:center" href="javascript:void(0)" onclick="add_book_rack()">
+        {% csrf_token %}
+        {% if is_in_bookrack %}
+            移出书架
+        {% else %}
+            加入书架
+        {% endif %}
+    </a>
+    <div style="font-size: 16px;line-height: 40px">
+        <p style="background-color:#4abacd;height: 40px">
+            <a>最新章节</a>
+        </p>
+        {% for chapter in chapters %}
+            <p><a>
+                {{ chapter.chapter_title }}
+            </a></p>
+        {% endfor %}
+        <p style="background-color:#4abacd;height: 40px">
+            <a style="font-size: 16px;line-height: 40px;text-align:center"
+               href="catalog/{{ novel.novel_type }}-{{ novel.novel_id }}">查看全部</a>
+        </p>
+    </div>
+    <script>
+        //加入书架的方法
+        function add_book_rack() {
+            var token = $.cookie('csrftoken');
+            $.ajax({
+                url: "/novel/bookrack/",
+                type:{% if is_in_bookrack %}"delete"{% else %}"post"{% endif %},
+                headers:{'X-CSRFToken': token},
+                data:{
+                    "novel_id":{{ novel.novel_id }}
+                },
+                success: function (r) {
+                    var json = JSON.parse(r)
+                    if (json.status) {
+                        window.location.href = '/novel/index/'
+                    } else {
+                        alert(r.error)
+                    }
+                }
+            })
+        }
+    </script>
+{% endblock %}
+
+
+
+<!--<body>
+<div style="font-size: 18px">
+    <header style="background-color: #4abacd;height: 54px;line-height: 54px;border-bottom: 1px #4399b8 solid;text-align: center;">
+        <a href="javascript:history.go(-1);" style="margin-left:5px;margin-top:10px;background-color:#4abacd;color:#dddddd;border: 1px solid azure;text-align:left;float: left">back</a>
+        <a>Cocomini</a>
+    </header>
+</div>
+</body>-->

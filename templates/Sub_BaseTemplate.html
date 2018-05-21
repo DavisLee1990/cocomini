@@ -1,0 +1,18 @@
+{% extends "Easyui_BaseTemplate_mobile.html" %}
+
+{% block body %}
+    <div class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <a href="javascript:history.go(-1);"
+                   style="margin-left:5px;margin-top:10px;background-color:#4abacd;color:#dddddd;border: 1px solid azure;text-align:left;float: left">back</a>
+                <div class="m-title" style="background-color: #a6e1ec;height: 50px">
+                {% block head-title %}
+                {% endblock %}
+                </div>
+            </div>
+        </header>
+        {% block more-content %}
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "Sub_BaseTemplate.html" %}
+
+{% block title %}
+    {{ novel_title }}
+{% endblock %}
+
+{% block head-title %}
+    {{ novel_title }}
+{% endblock %}
+
+{% block head-script %}
+    <script>
+        $(function (){
+            page_num=1  //全局变量:页数    初始值为第一页
+
+            function load_chapter(page_num) {
+                $.ajax({
+                        url: '/novel/catalog/{{ novel_type }}-{{ novel_id }}-'+page_num,
+                        type: 'get',
+                        success: function (r) {
+                            var json = JSON.parse(r)
+                            if (json.status) {
+                                page_num+=1;
+                                chapters=json.data;
+                                for(var i=0;i<chapters.length;i++){
+                                    chapter="<li><a href='/novel/chapter/content/{{ novel_type }}-{{ novel_id }}-"+chapters[i].chapter_id+"'>"+chapters[i].chapter_title+"</a></li>"
+                                    $("#catalog_content").append(chapter)
+                                }
+                            }
+                        }
+                })
+            }
+            load_chapter(page_num)
+
+            //每次滑动加载更多
+            $(window).scroll(function () {
+                var scrollH = document.documentElement.scrollHeight;
+                var clientH = document.documentElement.clientHeight;
+                if (scrollH == (document.documentElement.scrollTop | document.body.scrollTop) + clientH) {
+                    load_chapter(page_num)
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block more-content %}
+    <ul class="m-list" id="catalog_content">
+    </ul>
+{% endblock %}
+
+
+
+<!--
+{#{% for chapter in datas %}#}
+{#
+{#        {% endfor %}#}
+
+</div>
+<div id="p2" class="easyui-navpanel" style="font-size:16px">
+    <header>
+        <div class="m-toolbar" style="background-color:#a6e1ec;height: 50px">
+            <span id="p2-title" class="m-title">Detail</span>
+            <div class="m-left" style="background-color:#a6e1ec;">
+                <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true"
+                   style="width:50px;background-color:#a6e1ec;" onclick="$.mobile.back()">Back</a>
+            </div>
+        </div>
+    </header>
+    <div id="chapter-content">
+    </div>
+    <p>
+        <a id="pre_chapter" href="javascript:void(0)" onclick="get_chapter(this)">上一章</a>
+        <a id="next_chapter" href="javascript:void(0)" onclick="get_chapter(this)">下一章</a>
+    </p>
+</div>
+
+<script type="text/javascript">
+    function openit(target) {
+        var text = $(target).text();
+        var url = $(target).attr("id")
+        $('#p2-title').html(text);
+        //发送ajax请求获取内容
+        $.ajax({
+            url: "/chapter/content/" + url,
+            type: "get",
+            success: function (r) {
+                load_content(r)
+                $.mobile.go('#p2');
+            }
+        })
+    }
+    function get_chapter(target) {
+        var url=$(target).data("url")
+        $.ajax({
+            url: url,
+            type: "get",
+            success: function (r) {
+                load_content(r)
+            }
+        })
+    }
+    function load_content(r){
+        var json = JSON.parse(r)
+        $('#p2-title').html(json.data.chapter_title);
+        if (json.status) {
+            $("#chapter-content").html(json.data.content);
+        } else {
+            $("#chapter-content").html("暂未爬取到该章节的数据");
+        }
+        if(json.data.pre_chapter_id){
+            $("#pre_chapter").attr("style", "display:block");
+            var url="/chapter/content/"+json.data.novel_id+"-"+json.data.novel_type+"-"+json.data.pre_chapter_id
+            $("#pre_chapter").data("url",url)
+            console.log(url)
+        }else{
+            $("#pre_chapter").attr("style", "display:none");
+        }
+        if(json.data.next_chapter_id){
+            $("#next_chapter").attr("style", "display:block");
+            var url="/chapter/content/"+json.data.novel_id+"-"+json.data.novel_type+"-"+json.data.next_chapter_id
+            $("#next_chapter").data("url",url)
+        }else{
+            $("#next_chapter").attr("style", "display:none");
+        }
+    }
+</script>
+ -->

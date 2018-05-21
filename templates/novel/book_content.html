@@ -1,0 +1,40 @@
+{% extends "Sub_BaseTemplate.html" %}
+
+{% block title %}
+    {{ chapter_title }}
+{% endblock %}
+
+{% block head-title %}
+    {{ chapter_title }}
+{% endblock %}
+
+
+{% block more-content %}
+    <div id="chapter-content" style="font-size: 16px">
+        {% autoescape off %}
+            {{ content }}
+        {% endautoescape %}
+    </div>
+    <p style="font-size: 16px">
+        {% if pre_chapter_id %}
+            <a href="/novel/chapter/content/{{ novel_type }}-{{ novel_id }}-{{ pre_chapter_id }}">上一章</a>
+        {% endif %}
+            <a href="/novel/catalog/{{ novel_type }}-{{ novel_id }}">目录</a>
+        {% if next_chapter_id %}
+            <a href="/novel/chapter/content/{{ novel_type }}-{{ novel_id }}-{{ next_chapter_id }}">下一章</a>
+        {% endif %}
+    </p>
+{% endblock %}
+
+{% block body-script %}
+    {#    <script>#}
+    {#        $(function () {#}
+    {#            {% if content %}#}
+    {#                $('#chapter-content').html("{{ content }}")#}
+    {#            {% else %}#}
+    {#                $('#chapter-content').html("暂未爬取到该章节的数据")#}
+    {#            {% endif %}#}
+    {##}
+    {#        })#}
+    {#    </script>#}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "Easyui_BaseTemplate_mobile.html" %}
+{% block title %}
+    Hi,cocomini
+{% endblock %}
+
+{% block head-script %}
+    <script>
+        $(function(){
+            $("#bookrack").click(function(){
+                $("#content").navpanel({href:"/novel/bookrack/"})
+            })
+            $("#book_store").click(function(){
+                $("#content").navpanel({href:"/novel/bookstore/"})
+            })
+            $("#person_center").click(function(){
+                $("#content").navpanel({href:"/user/info/"})
+            })
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="easyui-navpanel" style="position:relative" id="content" data-options="href:'/novel/bookrack/'">
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%">
+                <a class="easyui-linkbutton" id="bookrack" data-options="iconCls:'icon-large-picture',size:'large',iconAlign:'top',plain:true">书架</a>
+                <a class="easyui-linkbutton" id="book_store" data-options="iconCls:'icon-large-clipart',size:'large',iconAlign:'top',plain:true">书城</a>
+                <a class="easyui-linkbutton" id="person_center" data-options="iconCls:'icon-large-shapes',size:'large',iconAlign:'top',plain:true">个人</a>
+            </div>
+        </footer>
+    </div>
+{% endblock %}
