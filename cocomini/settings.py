@@ -131,8 +131,8 @@ STATICFILES_DIRS=(os.path.join(BASE_DIR,"static"),)
 #微信开发者帐号配置
 
 wechat_config={
-    "token":"xxx",
-    "appid":"xxx",
-    "appsecret":"xxx"
+    "token":"7LKLaC1HHvcCeX",
+    "appid":"wx035fe15e7c8a4bf6",
+    "appsecret":"c65df9ae99075a0763a4b2e75d387adf"
 }
 page_config=20 #图书目录一页多少章
