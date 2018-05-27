@@ -77,20 +77,18 @@ class Registe(View):
 def user_info(req):
     return render(req,"user/info.html")
 
-def login_util(func):
+def login_require(func):
     '''
     登录验证装饰器
     :param func: 
     :return: 
     '''
     def wrapper(*args,**kwargs):
-        try:
-            if not args[0].session['is_login']:
-                #如果没登录过，重定向到登录页面
-                return redirect('/user/login/')
-            else:
-                data=func(*args,**kwargs)
-                return data
-        except Exception as e:
+        print("参数:",args)
+        if not args[0].session.get('is_login', None):
+            #如果没登录过，重定向到登录页面
             return redirect('/user/login/')
+        else:
+            data=func(*args,**kwargs)
+            return data
     return wrapper

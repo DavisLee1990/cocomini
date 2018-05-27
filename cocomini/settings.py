@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'cocomini',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': 'xxxx',
+        'HOST': '101.132.110.217',
         'PORT': '3306',
     }
 }
@@ -131,7 +131,7 @@ STATICFILES_DIRS=(os.path.join(BASE_DIR,"static"),)
 #微信开发者帐号配置
 
 wechat_config={
-    "token":"xx",
+    "token":"xxx",
     "appid":"xxx",
     "appsecret":"xxx"
 }

@@ -25,5 +25,4 @@ urlpatterns = [
     path("catalog/<int:novel_type>-<int:novel_id>-<int:page_num>", views.catalog_data),  # 书籍目录数据加载
     path("chapter/content/<int:novel_type>-<int:novel_id>-<int:chapter_id>", views.chapterContent), #书籍内容页面请求
     path("booksearch/", views.booksearch),#处理图书搜索请求
-    path("test/", views.test)
 ]

@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+from wechat import views
 
 urlpatterns = [
+    path('main/', views.weixin_main),  # get 微信服务器验证请求,post 微信数据请求转发
 ]

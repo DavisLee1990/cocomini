@@ -3,19 +3,19 @@ from django.views import View
 from novel import models
 import json
 from cocomini.settings import page_config
-from user.views import login_util
-
+from user.views import login_require
+from django.http import QueryDict
+@login_require
 def index(req):
     return render(req, "novel/index.html")
 
-
 class Bookrack(View):
-    def get(self, req):
+    def get(self,req):
         user_id = req.session.get("user_id")
         novels = models.User_Novel.objects.filter(user_id=user_id).all()
         return render(req, "novel/book_rack.html", {'novels': novels})
 
-    def post(self, req):
+    def post(self,req):
         res = {
             "status": 1,
             "error": None,
@@ -26,18 +26,20 @@ class Bookrack(View):
         models.User_Novel.objects.create(novel_id=novel_id, user_id=user_id)
         return HttpResponse(json.dumps(res))
 
-    def delete(self, req):
+    def delete(self,req):
         res = {
             "status": 1,
             "error": None,
             "data": None
         }
         user_id = req.session["user_id"]
-        novel_id = req.POST.get("novel_id")
-        models.User_Novel.objects.filter(novel_id=novel_id, user_id=user_id).delete()
+        # novel_id = req.DELETE.get("novel_id",None) #主：WSGIRequest没有PUT和DELETE属性,所以只能通过以下方式获取
+        delete = QueryDict(req.body)
+        novel_id = delete.get('novel_id')
+        models.User_Novel.objects.filter(novel_id=novel_id,user_id=user_id).delete()
         return HttpResponse(json.dumps(res))
 
-
+@login_require
 def bookstore(req):
     novels = models.Novel.objects.all()
     qihuan_novels = novels.filter(novel_type=0).all().order_by("-novel_id")[:6]
@@ -57,7 +59,7 @@ def bookstore(req):
         "nvsheng_novels": nvsheng_novels
     })
 
-
+@login_require
 def novelDetail(req, novel_id):
     user_id = req.session["user_id"]
     bookrack_result = models.User_Novel.objects.filter(novel_id=novel_id, user_id=user_id).first()
@@ -102,7 +104,6 @@ def novelDetail(req, novel_id):
         "is_in_bookrack": is_in_bookrack
     })
 
-
 def judge_models(novel_type):
     '''
     封装方法，此方法判定动态采用哪一个表：
@@ -120,7 +121,7 @@ def judge_models(novel_type):
     ]
     return chapter_data_list[novel_type]
 
-
+@login_require
 def catalog_page(req, novel_type, novel_id):
     database_chapter = judge_models(novel_type)
     chapter = database_chapter.objects.filter(novel_id=novel_id).first()
@@ -159,6 +160,7 @@ def catalog_data(req, novel_type, novel_id, page_num):
     res["data"] = data
     return HttpResponse(json.dumps(res))
 
+@login_require
 def chapterContent(req,novel_type,novel_id,chapter_id):
     database_chapter = judge_models(novel_type)
     chapters = database_chapter.objects.filter(novel_id=novel_id).all().order_by("chapter_id")
@@ -182,6 +184,7 @@ def chapterContent(req,novel_type,novel_id,chapter_id):
         "next_chapter_id":next_chapter_id
     })
 
+@login_require
 def booksearch(req):
     '''
     处理图书请求
@@ -192,5 +195,3 @@ def booksearch(req):
     novels=models.Novel.objects.filter(novel_title__contains=search_key).all()
     return render(req,"novel/book_search.html",{"novels":novels,"search_key":search_key})
 
-def test(req):
-    return render(req, "novel/../templates/Sub_BaseTemplate.html")

@@ -10,26 +10,29 @@
 
 {% block head-script %}
     <script>
-        $(function (){
-            page_num=1  //全局变量:页数    初始值为第一页
+        $(function () {
+            page_num = 1  //全局变量:页数    初始值为第一页
 
             function load_chapter(page_num) {
+                var token = $.cookie('csrftoken');
                 $.ajax({
-                        url: '/novel/catalog/{{ novel_type }}-{{ novel_id }}-'+page_num,
-                        type: 'get',
-                        success: function (r) {
-                            var json = JSON.parse(r)
-                            if (json.status) {
-                                page_num+=1;
-                                chapters=json.data;
-                                for(var i=0;i<chapters.length;i++){
-                                    chapter="<li><a href='/novel/chapter/content/{{ novel_type }}-{{ novel_id }}-"+chapters[i].chapter_id+"'>"+chapters[i].chapter_title+"</a></li>"
-                                    $("#catalog_content").append(chapter)
-                                }
+                    url: '/novel/catalog/{{ novel_type }}-{{ novel_id }}-' + page_num,
+                    type: 'get',
+                    headers: {'X-CSRFToken': token},
+                    success: function (r) {
+                        var json = JSON.parse(r)
+                        if (json.status) {
+                            page_num += 1;
+                            chapters = json.data;
+                            for (var i = 0; i < chapters.length; i++) {
+                                chapter = "<li><a href='/novel/chapter/content/{{ novel_type }}-{{ novel_id }}-" + chapters[i].chapter_id + "'>" + chapters[i].chapter_title + "</a></li>"
+                                $("#catalog_content").append(chapter)
                             }
                         }
+                    }
                 })
             }
+
             load_chapter(page_num)
 
             //每次滑动加载更多
@@ -47,6 +50,7 @@
 
 {% block more-content %}
     <ul class="m-list" id="catalog_content">
+        {% csrf_token %}
     </ul>
 {% endblock %}
 

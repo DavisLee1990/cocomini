@@ -6,19 +6,24 @@
 {% block head-script %}
     <script>
         $(function () {
+            var console_token = $.cookie('csrftoken');
+            console.log(console_token);
+
             $("#login").click(function test() {
                 $("#login_info").html("")
                 user = $("#user_name").val();
                 pwd = $("#user_password").val();
                 if (!user) {
-                    $("#login_info").html("请输入用户")
+                    $("#login_info").html("请输入用户");
                 } else if (!pwd) {
-                    $("#login_info").html("请输入密码")
+                    $("#login_info").html("请输入密码");
                 }
                 if (user && pwd) {
+                    var token = $.cookie('csrftoken');
                     $.ajax({
                         url: '/user/login/',
                         type: 'post',
+                        headers:{'X-CSRFToken': token},
                         data: {"user": user, "pwd": pwd},
                         success: function (r) {
                             var json = JSON.parse(r)
@@ -58,8 +63,10 @@
                 <span id="login_info" style="color:rebeccapurple;font-size: 15px">{{ result.msg }}</span>
             </div>
             <div style="text-align:center;margin-top:30px">
-                <a href="#" id="login" class="easyui-linkbutton" style="width:100%;height:40px"><span
-                        style="font-size:16px">登录</span></a>
+                <a href="#" id="login" class="easyui-linkbutton" style="width:100%;height:40px">
+                    {% csrf_token %}
+                    <span style="font-size:16px">登录</span>
+                </a>
             </div>
             <div style="text-align:center;margin-top:30px">
                 <a href="/user/registe/" class="easyui-linkbutton" plain="true" outline="true"
