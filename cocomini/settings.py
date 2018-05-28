@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'cocomini',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': 'localhost',
+        'HOST': 'xxx',
         'PORT': '3306',
     }
 }

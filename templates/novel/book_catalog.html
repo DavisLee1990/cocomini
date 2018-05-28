@@ -11,9 +11,8 @@
 {% block head-script %}
     <script>
         $(function () {
-            page_num = 1  //全局变量:页数    初始值为第一页
-
-            function load_chapter(page_num) {
+            var page_num = 1  //全局变量:页数    初始值为第一页
+            function load_chapter() {
                 var token = $.cookie('csrftoken');
                 $.ajax({
                     url: '/novel/catalog/{{ novel_type }}-{{ novel_id }}-' + page_num,
@@ -32,15 +31,14 @@
                     }
                 })
             }
-
-            load_chapter(page_num)
-
+            load_chapter();
             //每次滑动加载更多
             $(window).scroll(function () {
                 var scrollH = document.documentElement.scrollHeight;
                 var clientH = document.documentElement.clientHeight;
                 if (scrollH == (document.documentElement.scrollTop | document.body.scrollTop) + clientH) {
-                    load_chapter(page_num)
+                    console.log("将要加载的页数:"+page_num);
+                    load_chapter()
                 }
             });
 
